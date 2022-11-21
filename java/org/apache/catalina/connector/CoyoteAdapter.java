@@ -327,17 +327,18 @@ public class CoyoteAdapter implements Adapter {
         Response response = (Response) res.getNote(ADAPTER_NOTES);
 
         if (request == null) {
-            // Create objects
+            // Create objects 创建 HttpServletRequest
             request = connector.createRequest();
             request.setCoyoteRequest(req);
+            // 创建 HttpServletReqsponse
             response = connector.createResponse();
             response.setCoyoteResponse(res);
 
-            // Link objects
+            // Link objects 关联对象
             request.setResponse(response);
             response.setRequest(request);
 
-            // Set as notes
+            // Set as notes set 节点
             req.setNote(ADAPTER_NOTES, request);
             res.setNote(ADAPTER_NOTES, response);
 
@@ -351,13 +352,14 @@ public class CoyoteAdapter implements Adapter {
 
         boolean async = false;
         boolean postParseSuccess = false;
-
+        // 设置线程信息
         req.getRequestProcessor().setWorkerThreadName(THREAD_NAME.get());
         req.setRequestThread();
 
         try {
             // Parse and set Catalina and configuration specific
             // request parameters
+            // 处理所有的信息.包含该请求对应的host和context
             postParseSuccess = postParseRequest(req, request, res, response);
             if (postParseSuccess) {
                 //check valves if we support async
@@ -715,6 +717,7 @@ public class CoyoteAdapter implements Adapter {
 
         while (mapRequired) {
             // This will map the the latest version by default
+            // 初始化好MappingData数据，其中有host和context
             connector.getService().getMapper().map(serverName, decodedURI,
                     version, request.getMappingData());
 
@@ -751,6 +754,7 @@ public class CoyoteAdapter implements Adapter {
 
             // Look for session ID in cookies and SSL session
             try {
+                // 处理cookies带的session信息
                 parseSessionCookiesId(request);
             } catch (IllegalArgumentException e) {
                 // Too many cookies

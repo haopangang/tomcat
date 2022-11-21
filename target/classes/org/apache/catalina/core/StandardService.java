@@ -16,12 +16,11 @@
  */
 package org.apache.catalina.core;
 
+import javax.management.ObjectName;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-
-import javax.management.ObjectName;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.Engine;
@@ -39,7 +38,6 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 
-
 /**
  * Standard implementation of the <code>Service</code> interface.  The
  * associated Container is generally an instance of Engine, but this is
@@ -53,14 +51,12 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     private static final Log log = LogFactory.getLog(StandardService.class);
     private static final StringManager sm = StringManager.getManager(StandardService.class);
 
-
     // ----------------------------------------------------- Instance Variables
 
     /**
      * The name of this service.
      */
     private String name = null;
-
 
     /**
      * The <code>Server</code> that owns this Service, if any.
@@ -71,7 +67,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
      * The property change support for this component.
      */
     protected final PropertyChangeSupport support = new PropertyChangeSupport(this);
-
 
     /**
      * The set of Connectors associated with this Service.
@@ -93,15 +88,12 @@ public class StandardService extends LifecycleMBeanBase implements Service {
      */
     protected final Mapper mapper = new Mapper();
 
-
     /**
      * Mapper listener.
      */
     protected final MapperListener mapperListener = new MapperListener(this);
 
-
     private long gracefulStopAwaitMillis = 0;
-
 
     // ------------------------------------------------------------- Properties
 
@@ -109,23 +101,19 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         return gracefulStopAwaitMillis;
     }
 
-
     public void setGracefulStopAwaitMillis(long gracefulStopAwaitMillis) {
         this.gracefulStopAwaitMillis = gracefulStopAwaitMillis;
     }
-
 
     @Override
     public Mapper getMapper() {
         return mapper;
     }
 
-
     @Override
     public Engine getContainer() {
         return engine;
     }
-
 
     @Override
     public void setContainer(Engine engine) {
@@ -169,7 +157,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         support.firePropertyChange("container", oldEngine, this.engine);
     }
 
-
     /**
      * Return the name of this Service.
      */
@@ -177,7 +164,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     public String getName() {
         return name;
     }
-
 
     /**
      * Set the name of this Service.
@@ -189,7 +175,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         this.name = name;
     }
 
-
     /**
      * Return the <code>Server</code> with which we are associated (if any).
      */
@@ -197,7 +182,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     public Server getServer() {
         return this.server;
     }
-
 
     /**
      * Set the <code>Server</code> with which we are associated (if any).
@@ -208,7 +192,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     public void setServer(Server server) {
         this.server = server;
     }
-
 
     // --------------------------------------------------------- Public Methods
 
@@ -232,9 +215,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                 try {
                     connector.start();
                 } catch (LifecycleException e) {
-                    log.error(sm.getString(
-                            "standardService.connector.startFailed",
-                            connector), e);
+                    log.error(sm.getString("standardService.connector.startFailed", connector), e);
                 }
             }
 
@@ -244,15 +225,13 @@ public class StandardService extends LifecycleMBeanBase implements Service {
 
     }
 
-
     public ObjectName[] getConnectorNames() {
         ObjectName results[] = new ObjectName[connectors.length];
-        for (int i=0; i<results.length; i++) {
+        for (int i = 0; i < results.length; i++) {
             results[i] = connectors[i].getObjectName();
         }
         return results;
     }
-
 
     /**
      * Add a property change listener to this component.
@@ -263,7 +242,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         support.addPropertyChangeListener(listener);
     }
 
-
     /**
      * Find and return the set of Connectors associated with this Service.
      */
@@ -271,7 +249,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     public Connector[] findConnectors() {
         return connectors;
     }
-
 
     /**
      * Remove the specified Connector from the set associated from this
@@ -298,9 +275,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                 try {
                     connectors[j].stop();
                 } catch (LifecycleException e) {
-                    log.error(sm.getString(
-                            "standardService.connector.stopFailed",
-                            connectors[j]), e);
+                    log.error(sm.getString("standardService.connector.stopFailed", connectors[j]), e);
                 }
             }
             connector.setService(null);
@@ -318,7 +293,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
     }
 
-
     /**
      * Remove a property change listener from this component.
      *
@@ -327,7 +301,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
-
 
     /**
      * Return a String representation of this component.
@@ -340,9 +313,9 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         return sb.toString();
     }
 
-
     /**
      * Adds a named executor to the service
+     *
      * @param ex Executor
      */
     @Override
@@ -361,9 +334,9 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
     }
 
-
     /**
      * Retrieves all executors
+     *
      * @return Executor[]
      */
     @Override
@@ -373,16 +346,16 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
     }
 
-
     /**
      * Retrieves executor by name, null if not found
+     *
      * @param executorName String
      * @return Executor
      */
     @Override
     public Executor getExecutor(String executorName) {
         synchronized (executors) {
-            for (Executor executor: executors) {
+            for (Executor executor : executors) {
                 if (executorName.equals(executor.getName())) {
                     return executor;
                 }
@@ -391,15 +364,15 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         return null;
     }
 
-
     /**
      * Removes an executor from the service
+     *
      * @param ex Executor
      */
     @Override
     public void removeExecutor(Executor ex) {
         synchronized (executors) {
-            if ( executors.remove(ex) && getState().isAvailable() ) {
+            if (executors.remove(ex) && getState().isAvailable()) {
                 try {
                     ex.stop();
                 } catch (LifecycleException e) {
@@ -409,19 +382,18 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
     }
 
-
     /**
      * Start nested components ({@link Executor}s, {@link Connector}s and
      * {@link Container}s) and implement the requirements of
      * {@link org.apache.catalina.util.LifecycleBase#startInternal()}.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents this component from being used
+     * @throws LifecycleException if this component detects a fatal error
+     *                            that prevents this component from being used
      */
     @Override
     protected void startInternal() throws LifecycleException {
 
-        if(log.isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             log.info(sm.getString("standardService.start.name", this.name));
         }
         setState(LifecycleState.STARTING);
@@ -434,7 +406,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
 
         synchronized (executors) {
-            for (Executor executor: executors) {
+            for (Executor executor : executors) {
                 executor.start();
             }
         }
@@ -443,29 +415,26 @@ public class StandardService extends LifecycleMBeanBase implements Service {
 
         // Start our defined Connectors second
         synchronized (connectorsLock) {
-            for (Connector connector: connectors) {
+            for (Connector connector : connectors) {
                 try {
                     // If it has already failed, don't try and start it
                     if (connector.getState() != LifecycleState.FAILED) {
                         connector.start();
                     }
                 } catch (Exception e) {
-                    log.error(sm.getString(
-                            "standardService.connector.startFailed",
-                            connector), e);
+                    log.error(sm.getString("standardService.connector.startFailed", connector), e);
                 }
             }
         }
     }
-
 
     /**
      * Stop nested components ({@link Executor}s, {@link Connector}s and
      * {@link Container}s) and implement the requirements of
      * {@link org.apache.catalina.util.LifecycleBase#stopInternal()}.
      *
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @throws LifecycleException if this component detects a fatal error
+     *                            that needs to be reported
      */
     @Override
     protected void stopInternal() throws LifecycleException {
@@ -474,25 +443,25 @@ public class StandardService extends LifecycleMBeanBase implements Service {
             // Initiate a graceful stop for each connector
             // This will only work if the bindOnInit==false which is not the
             // default.
-            for (Connector connector: connectors) {
+            for (Connector connector : connectors) {
                 connector.getProtocolHandler().closeServerSocketGraceful();
             }
 
             // Wait for the graceful shutdown to complete
             long waitMillis = gracefulStopAwaitMillis;
             if (waitMillis > 0) {
-                for (Connector connector: connectors) {
+                for (Connector connector : connectors) {
                     waitMillis = connector.getProtocolHandler().awaitConnectionsClose(waitMillis);
                 }
             }
 
             // Pause the connectors
-            for (Connector connector: connectors) {
+            for (Connector connector : connectors) {
                 connector.pause();
             }
         }
 
-        if(log.isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             log.info(sm.getString("standardService.stop.name", this.name));
         }
         setState(LifecycleState.STOPPING);
@@ -506,9 +475,8 @@ public class StandardService extends LifecycleMBeanBase implements Service {
 
         // Now stop the connectors
         synchronized (connectorsLock) {
-            for (Connector connector: connectors) {
-                if (!LifecycleState.STARTED.equals(
-                        connector.getState())) {
+            for (Connector connector : connectors) {
+                if (!LifecycleState.STARTED.equals(connector.getState())) {
                     // Connectors only need stopping if they are currently
                     // started. They may have failed to start or may have been
                     // stopped (e.g. via a JMX call)
@@ -517,9 +485,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                 try {
                     connector.stop();
                 } catch (Exception e) {
-                    log.error(sm.getString(
-                            "standardService.connector.stopFailed",
-                            connector), e);
+                    log.error(sm.getString("standardService.connector.stopFailed", connector), e);
                 }
             }
         }
@@ -531,12 +497,11 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         }
 
         synchronized (executors) {
-            for (Executor executor: executors) {
+            for (Executor executor : executors) {
                 executor.stop();
             }
         }
     }
-
 
     /**
      * Invoke a pre-startup initialization. This is used to allow connectors
@@ -548,6 +513,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         super.initInternal();
 
         if (engine != null) {
+            // 引擎初始化
             engine.init();
         }
 
@@ -568,8 +534,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                 try {
                     connector.init();
                 } catch (Exception e) {
-                    String message = sm.getString(
-                            "standardService.connector.initFailed", connector);
+                    String message = sm.getString("standardService.connector.initFailed", connector);
                     log.error(message, e);
 
                     if (Boolean.getBoolean("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE")) {
@@ -579,7 +544,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
             }
         }
     }
-
 
     @Override
     protected void destroyInternal() throws LifecycleException {
@@ -591,8 +555,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
                 try {
                     connector.destroy();
                 } catch (Exception e) {
-                    log.error(sm.getString(
-                            "standardService.connector.destroyFailed", connector), e);
+                    log.error(sm.getString("standardService.connector.destroyFailed", connector), e);
                 }
             }
         }
@@ -609,7 +572,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         super.destroyInternal();
     }
 
-
     /**
      * Return the parent class loader for this component.
      */
@@ -624,7 +586,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         return ClassLoader.getSystemClassLoader();
     }
 
-
     /**
      * Set the parent class loader for this server.
      *
@@ -634,10 +595,8 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     public void setParentClassLoader(ClassLoader parent) {
         ClassLoader oldParentClassLoader = this.parentClassLoader;
         this.parentClassLoader = parent;
-        support.firePropertyChange("parentClassLoader", oldParentClassLoader,
-                                   this.parentClassLoader);
+        support.firePropertyChange("parentClassLoader", oldParentClassLoader, this.parentClassLoader);
     }
-
 
     @Override
     protected String getDomainInternal() {
@@ -658,7 +617,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
         // default
         return domain;
     }
-
 
     @Override
     public final String getObjectNameKeyProperties() {

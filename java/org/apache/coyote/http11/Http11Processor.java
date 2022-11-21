@@ -510,7 +510,9 @@ public class Http11Processor extends AbstractProcessor {
 
             // Parsing the request header
             try {
+                // 这个方法从socket里面读取出有用的信息，主要是header信息
                 if (!inputBuffer.parseRequestLine(keptAlive)) {
+                    // 协议升级
                     if (inputBuffer.getParsingRequestLinePhase() == -1) {
                         return SocketState.UPGRADING;
                     } else if (handleIncompleteRequestLineRead()) {
@@ -520,7 +522,7 @@ public class Http11Processor extends AbstractProcessor {
 
                 // Process the Protocol component of the request line
                 // Need to know if this is an HTTP 0.9 request before trying to
-                // parse headers.
+                // parse headers.  准备协议
                 prepareRequestProtocol();
 
                 if (endpoint.isPaused()) {
@@ -570,7 +572,7 @@ public class Http11Processor extends AbstractProcessor {
                 setErrorState(ErrorState.CLOSE_CLEAN, t);
             }
 
-            // Has an upgrade been requested?
+            // Has an upgrade been requested?  协议升级
             if (isConnectionToken(request.getMimeHeaders(), "upgrade")) {
                 // Check the protocol
                 String requestedProtocol = request.getHeader("Upgrade");
@@ -613,6 +615,7 @@ public class Http11Processor extends AbstractProcessor {
                 // Setting up filters, and parse some request headers
                 rp.setStage(org.apache.coyote.Constants.STAGE_PREPARE);
                 try {
+                    // 准备请求信息，把一些信息封装到 httpRequest中
                     prepareRequest();
                 } catch (Throwable t) {
                     ExceptionUtils.handleThrowable(t);
@@ -636,6 +639,7 @@ public class Http11Processor extends AbstractProcessor {
             if (getErrorState().isIoAllowed()) {
                 try {
                     rp.setStage(org.apache.coyote.Constants.STAGE_SERVICE);
+                    //？？？ 真正处理，开始
                     getAdapter().service(request, response);
                     // Handle when the response was committed before a serious
                     // error occurred.  Throwing a ServletException should both
@@ -1030,6 +1034,7 @@ public class Http11Processor extends AbstractProcessor {
         prepareInputFilters(headers);
 
         // Validate host name and extract port if present
+        // 解析host信息
         parseHost(hostValueMB);
 
         if (!getErrorState().isIoAllowed()) {

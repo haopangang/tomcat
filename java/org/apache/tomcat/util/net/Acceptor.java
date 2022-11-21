@@ -115,7 +115,6 @@ public class Acceptor<U> implements Runnable {
                 try {
                     //if we have reached max connections, wait
                     endpoint.countUpOrAwaitConnection();
-
                     // Endpoint might have been paused while waiting for latch
                     // If that is the case, don't accept new connections
                     if (endpoint.isPaused()) {
@@ -126,6 +125,7 @@ public class Acceptor<U> implements Runnable {
                     try {
                         // Accept the next incoming connection from the server
                         // socket
+                        // 监听端口，获取到连接
                         socket = endpoint.serverSocketAccept();
                     } catch (Exception ioe) {
                         // We didn't get a socket
@@ -146,6 +146,7 @@ public class Acceptor<U> implements Runnable {
                     if (!stopCalled && !endpoint.isPaused()) {
                         // setSocketOptions() will hand the socket off to
                         // an appropriate processor if successful
+                        // 放到poller队列中
                         if (!endpoint.setSocketOptions(socket)) {
                             endpoint.closeSocket(socket);
                         }
